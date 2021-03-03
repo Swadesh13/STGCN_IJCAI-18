@@ -37,6 +37,7 @@ parser.add_argument('--lr', type=float, default=1e-3)
 parser.add_argument('--opt', type=str, default='RMSProp')
 parser.add_argument('--graph', type=str, default='default')
 parser.add_argument('--inf_mode', type=str, default='merge')
+parser.add_argument('--datafile', type=str, default='default')
 
 args = parser.parse_args()
 print(f'Training configs: {args}')
@@ -48,7 +49,7 @@ blocks = [[1, 32, 64], [64, 32, 128]]
 
 # Load wighted adjacency matrix W
 if args.graph == 'default':
-    W = weight_matrix(pjoin('./dataset', f'PeMSD7_W_{n}.csv'))
+    W = weight_matrix(pjoin('./dataset', f'PollutionW_km2.csv'))
 else:
     # load customized graph weight matrix
     W = weight_matrix(pjoin('./dataset', args.graph))
@@ -60,7 +61,10 @@ Lk = cheb_poly_approx(L, Ks, n)
 tf.add_to_collection(name='graph_kernel', value=tf.cast(tf.constant(Lk), tf.float32))
 
 # Data Preprocessing
-data_file = f'PeMSD7_V_{n}.csv'
+if  args.datafile ==  'default':
+    data_file = f'Delhi_PM2.5.csv'
+else:
+    data_file = args.datafile
 n_train, n_val, n_test = 34, 5, 5
 PeMS = data_gen(pjoin('./dataset', data_file), (n_train, n_val, n_test), n, n_his + n_pred)
 print(f'>> Loading dataset with Mean: {PeMS.mean:.2f}, STD: {PeMS.std:.2f}')
