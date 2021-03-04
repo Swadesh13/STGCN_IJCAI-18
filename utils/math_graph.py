@@ -51,7 +51,8 @@ def cheb_poly_approx(L, Ks, n):
     elif Ks == 1:
         return np.asarray(L0)
     else:
-        raise ValueError(f'ERROR: the size of spatial kernel must be greater than 1, but received "{Ks}".')
+        raise ValueError(
+            f'ERROR: the size of spatial kernel must be greater than 1, but received "{Ks}".')
 
 
 def first_approx(W, n):
@@ -87,11 +88,12 @@ def weight_matrix(file_path, sigma2=0.1, epsilon=0.5, scaling=True):
         print('The input graph is a 0/1 matrix; set "scaling" to False.')
         scaling = False
 
-    if scaling:
-        n = W.shape[0]
-        W = W / 10000.
-        W2, W_mask = W * W, np.ones([n, n]) - np.identity(n)
-        # refer to Eq.10
-        return np.exp(-W2 / sigma2) * (np.exp(-W2 / sigma2) >= epsilon) * W_mask
-    else:
-        return W
+    # if scaling:
+    #     n = W.shape[0]
+    #     W = W / 10000.
+    #     W2, W_mask = W * W, np.ones([n, n]) - np.identity(n)
+    #     # refer to Eq.10
+    #     return np.exp(-W2 / sigma2) * (np.exp(-W2 / sigma2) >= epsilon) * W_mask
+    # else:
+    #     return W
+    return W
